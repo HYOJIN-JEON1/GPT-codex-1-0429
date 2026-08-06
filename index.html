@@ -30,11 +30,11 @@
     <footer class="wrap"><span>Hyojin Jeon</span><span>Seoul National University</span></footer>
   </main>
   <script>
-    const siteVersion='20260806-cvfinal2';
+    const siteVersion='20260806-cv-real-final';
     const assets={
       poster:{prefix:'data/poster/',count:22,type:'application/pdf',name:'Hyojin_Jeon_APA2026_Poster.pdf'},
       preview:{prefix:'data/preview/',count:8,type:'image/jpeg',name:'poster-preview.jpg'},
-      cv:{prefix:'data/cv/',count:2,type:'application/pdf',name:'Hyojin_Jeon_APA2026_CV_Final.pdf'}
+      cv:{prefix:'data/cv/',count:2,type:'application/pdf',name:'Hyojin_Jeon_CV_0806_REAL_FINAL_PORTRAIT.pdf'}
     };
     const cache={};
     const load=key=>cache[key]||(cache[key]=Promise.all(Array.from({length:assets[key].count},(_,i)=>fetch(`${assets[key].prefix}${String(i).padStart(3,'0')}.txt?v=${siteVersion}`).then(r=>{if(!r.ok)throw new Error('Asset unavailable');return r.text()}))).then(parts=>parts.join('')));

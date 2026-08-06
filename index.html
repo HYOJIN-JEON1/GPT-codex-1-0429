@@ -30,13 +30,14 @@
     <footer class="wrap"><span>Hyojin Jeon</span><span>Seoul National University</span></footer>
   </main>
   <script>
+    const siteVersion='20260806-landscape';
     const assets={
       poster:{prefix:'data/poster/',count:22,type:'application/pdf',name:'Hyojin_Jeon_APA2026_Poster.pdf'},
       preview:{prefix:'data/preview/',count:8,type:'image/jpeg',name:'poster-preview.jpg'},
       cv:{prefix:'data/cv/',count:2,type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',name:'Hyojin_Jeon_CV.docx'}
     };
     const cache={};
-    const load=key=>cache[key]||(cache[key]=Promise.all(Array.from({length:assets[key].count},(_,i)=>fetch(`${assets[key].prefix}${String(i).padStart(3,'0')}.txt`).then(r=>{if(!r.ok)throw new Error('Asset unavailable');return r.text()}))).then(parts=>parts.join('')));
+    const load=key=>cache[key]||(cache[key]=Promise.all(Array.from({length:assets[key].count},(_,i)=>fetch(`${assets[key].prefix}${String(i).padStart(3,'0')}.txt?v=${siteVersion}`).then(r=>{if(!r.ok)throw new Error('Asset unavailable');return r.text()}))).then(parts=>parts.join('')));
     const blobUrl=async key=>{const b64=await load(key),raw=atob(b64),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);return URL.createObjectURL(new Blob([bytes],{type:assets[key].type}))};
     const openPoster=async e=>{e.preventDefault();const tab=window.open('about:blank','_blank');try{const url=await blobUrl('poster');if(tab)tab.location=url;else location.href=url}catch(err){if(tab)tab.close();alert('Please try opening the poster again.')}};
     document.getElementById('poster-link').addEventListener('click',openPoster);

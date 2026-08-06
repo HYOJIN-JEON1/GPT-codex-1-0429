@@ -21,13 +21,29 @@
     <section class="content wrap">
       <div class="heading"><p class="kicker">FEATURED WORK</p><h2>Poster &amp; curriculum vitae</h2></div>
       <article class="poster">
-        <a class="preview" href="Hyojin_Jeon_APA2026_Poster.pdf" target="_blank"><img src="poster-preview.jpg" alt="Preview of the APA 2026 research poster"><span>View full poster</span></a>
-        <div class="copy"><p class="meta">APA 2026 · POSTER E7</p><h3>LLM-Based ACT Chatbot Targets Flexibility to Support Creative Metacognition</h3><p>A randomized active-control study examining whether brief ACT-based exercises delivered by a generative AI chatbot can strengthen psychological flexibility and support creative metacognition.</p><p class="session">August 6 · 2:30–3:30 PM · Hall D</p><a class="textlink" href="Hyojin_Jeon_APA2026_Poster.pdf" target="_blank">Open poster PDF ↗</a></div>
+        <a class="preview" id="poster-preview-link" href="#"><img id="poster-preview-image" alt="Preview of the APA 2026 research poster"><span>View full poster</span></a>
+        <div class="copy"><p class="meta">APA 2026 · POSTER E7</p><h3>LLM-Based ACT Chatbot Targets Flexibility to Support Creative Metacognition</h3><p>A randomized active-control study examining whether brief ACT-based exercises delivered by a generative AI chatbot can strengthen psychological flexibility and support creative metacognition.</p><p class="session">August 6 · 2:30–3:30 PM · Hall D</p><a class="textlink" id="poster-link" href="#">Open poster PDF ↗</a></div>
       </article>
-      <article class="cv"><div><p class="meta">RESEARCH PROFILE</p><h3>Curriculum Vitae</h3><p>Education, publications, conference presentations, research experience, professional work, awards, and academic service.</p></div><a class="button cvbtn" href="Hyojin_Jeon_CV.docx" download>Download CV ↓</a></article>
+      <article class="cv"><div><p class="meta">RESEARCH PROFILE</p><h3>Curriculum Vitae</h3><p>Education, publications, conference presentations, research experience, professional work, awards, and academic service.</p></div><a class="button cvbtn" id="cv-link" href="#">Download CV ↓</a></article>
     </section>
     <section class="connect wrap"><p class="kicker">LET'S CONNECT</p><h2>Continue the conversation.</h2><p>I'd be glad to connect around educational psychology, AI-supported learning, creativity, and interdisciplinary research.</p><div class="links"><a href="mailto:dsg1023@snu.ac.kr">dsg1023@snu.ac.kr</a><a href="tel:+821049813782">+82 10-4981-3782</a><a href="https://www.linkedin.com/in/%ED%9A%A8%EC%A7%84-%EC%A0%84-79a9132a1" target="_blank">LinkedIn ↗</a></div></section>
     <footer class="wrap"><span>Hyojin Jeon</span><span>Seoul National University</span></footer>
   </main>
+  <script>
+    const assets={
+      poster:{prefix:'data/poster/',count:22,type:'application/pdf',name:'Hyojin_Jeon_APA2026_Poster.pdf'},
+      preview:{prefix:'data/preview/',count:8,type:'image/jpeg',name:'poster-preview.jpg'},
+      cv:{prefix:'data/cv/',count:2,type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',name:'Hyojin_Jeon_CV.docx'}
+    };
+    const cache={};
+    const load=key=>cache[key]||(cache[key]=Promise.all(Array.from({length:assets[key].count},(_,i)=>fetch(`${assets[key].prefix}${String(i).padStart(3,'0')}.txt`).then(r=>{if(!r.ok)throw new Error('Asset unavailable');return r.text()}))).then(parts=>parts.join('')));
+    const blobUrl=async key=>{const b64=await load(key),raw=atob(b64),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);return URL.createObjectURL(new Blob([bytes],{type:assets[key].type}))};
+    const openPoster=async e=>{e.preventDefault();const tab=window.open('about:blank','_blank');try{const url=await blobUrl('poster');if(tab)tab.location=url;else location.href=url}catch(err){if(tab)tab.close();alert('Please try opening the poster again.')}};
+    document.getElementById('poster-link').addEventListener('click',openPoster);
+    document.getElementById('poster-preview-link').addEventListener('click',openPoster);
+    document.getElementById('cv-link').addEventListener('click',async e=>{e.preventDefault();const url=await blobUrl('cv'),a=document.createElement('a');a.href=url;a.download=assets.cv.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000)});
+    load('preview').then(b64=>document.getElementById('poster-preview-image').src=`data:image/jpeg;base64,${b64}`);
+    load('poster');load('cv');
+  </script>
 </body>
 </html>
